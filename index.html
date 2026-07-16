@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>🎂 生日快乐 宝宝 🎂</title>
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Dancing+Script:wght@400;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --rose: #e91e63;
+  --rose-light: #f8bbd0;
+  --pink: #ffb6c1;
+  --warm-white: #fff5f5;
+  --text: #5d4037;
+  --text-light: #8d6e63;
+  --gold: #d4a574;
+  --card-bg: rgba(255, 255, 255, 0.25);
+  --card-border: rgba(255, 255, 255, 0.4);
+}
+
+body {
+  font-family: 'Noto Serif SC', 'ZCOOL XiaoWei', serif;
+  color: var(--text);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== Background Layer ===== */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+.bg-layer img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  filter: blur(8px) brightness(0.45);
+}
+.bg-layer img.active { opacity: 1; }
+
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, rgba(233,30,99,0.25) 0%, rgba(255,183,128,0.2) 50%, rgba(233,30,99,0.25) 100%);
+  pointer-events: none;
+}
+
+/* ===== Floating Petals ===== */
+.petals-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  top: -60px;
+  animation: fall linear infinite;
+  opacity: 0.7;
+  font-size: 24px;
+  filter: blur(0.5px);
+}
+@keyframes fall {
+  0%   { transform: translateY(-10vh) rotate(0deg) translateX(0px); opacity: 0; }
+  5%   { opacity: 0.7; }
+  90%  { opacity: 0.6; }
+  100% { transform: translateY(105vh) rotate(720deg) translateX(var(--drift)); opacity: 0; }
+}
+
+/* ===== Main Content ===== */
+.main-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px 20px;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ===== Center Card ===== */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  padding: 32px 24px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(233,30,99,0.15), 0 2px 8px rgba(0,0,0,0.08);
+  margin-bottom: 28px;
+  animation: cardIn 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card .icon-row {
+  font-size: 36px;
+  margin-bottom: 8px;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50%     { transform: translateY(-8px); }
+}
+
+.card h1 {
+  font-family: 'Dancing Script', 'Noto Serif SC', cursive;
+  font-size: clamp(28px, 6vw, 42px);
+  color: var(--rose);
+  margin-bottom: 6px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.card .subtitle {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+.card .divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  margin: 0 auto 18px;
+  border-radius: 2px;
+}
+.card .message {
+  text-align: left;
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+  letter-spacing: 0.5px;
+}
+.card .message p { margin-bottom: 12px; text-indent: 2em; }
+.card .message .signature {
+  text-align: right;
+  margin-top: 8px;
+  font-style: italic;
+  color: var(--text-light);
+  text-indent: 0;
+}
+
+/* ===== Swiper Carousel ===== */
+.carousel-section {
+  max-width: 500px;
+  width: 100%;
+  margin-bottom: 28px;
+  animation: cardIn 1.2s 0.2s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.carousel-section .section-label {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+}
+
+.swiper { width: 100%; padding: 10px 0 30px; }
+.swiper-slide {
+  background: transparent;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+.swiper-slide img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
+}
+.swiper-slide-active { transform: scale(1.05); }
+
+.swiper-pagination-bullet {
+  background: rgba(255,255,255,0.7);
+  opacity: 0.5;
+}
+.swiper-pagination-bullet-active { background: #fff; opacity: 1; }
+
+/* ===== QR Code Section ===== */
+.qr-section {
+  text-align: center;
+  margin-bottom: 20px;
+  animation: cardIn 1.2s 0.4s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.qr-card {
+  display: inline-block;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px 24px 14px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+.qr-card canvas,
+.qr-card img {
+  display: block;
+  margin: 0 auto 8px;
+  border-radius: 8px;
+}
+.qr-card .qr-hint {
+  font-size: 12px;
+  color: var(--text-light);
+  letter-spacing: 1px;
+}
+
+/* ===== Music Button ===== */
+.music-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  -webkit-tap-highlight-color: transparent;
+}
+.music-btn:active { transform: scale(0.9); }
+.music-btn.playing {
+  background: rgba(233,30,99,0.5);
+  border-color: rgba(255,255,255,0.8);
+  animation: musicPulse 2s ease-in-out infinite;
+}
+@keyframes musicPulse {
+  0%,100% { box-shadow: 0 4px 15px rgba(233,30,99,0.3); }
+  50%     { box-shadow: 0 4px 30px rgba(233,30,99,0.6); }
+}
+
+/* ===== Loading Screen ===== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s, visibility 0.6s;
+}
+.loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading-heart {
+  font-size: 60px;
+  animation: heartBeat 1s ease-in-out infinite;
+}
+@keyframes heartBeat {
+  0%,100% { transform: scale(1); }
+  15%     { transform: scale(1.25); }
+  30%     { transform: scale(1); }
+  45%     { transform: scale(1.2); }
+}
+.loading-text {
+  margin-top: 16px;
+  font-size: 16px;
+  color: var(--rose);
+  letter-spacing: 3px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 400px) {
+  .card { padding: 24px 16px; }
+  .card .message { font-size: 14px; line-height: 1.9; }
+  .swiper-slide img { height: 220px; }
+}
+
+/* ===== Tap Hint ===== */
+.tap-hint {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  pointer-events: none;
+  z-index: 200;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  letter-spacing: 1px;
+}
+.tap-hint.show { transform: translate(-50%, -50%) scale(1); }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-heart">💗</div>
+  <div class="loading-text">正在准备惊喜...</div>
+</div>
+
+<!-- Background Layer -->
+<div class="bg-layer" id="bgLayer"></div>
+<div class="bg-overlay"></div>
+
+<!-- Floating Petals -->
+<div class="petals-container" id="petalsContainer"></div>
+
+<!-- Tap Hint -->
+<div class="tap-hint" id="tapHint">🎵 点这里开始播放音乐</div>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Center Card -->
+  <div class="card">
+    <div class="icon-row">🎂</div>
+    <h1>生日快乐！！！<br>宝宝</h1>
+    <div class="subtitle">— FOREVER LOVE —</div>
+    <div class="divider"></div>
+    <div class="message">
+      <p>好长时间没给你写过信啦，突然有点不会写了。从去年结婚到现在，不知不觉我们已经马上5年了。别人都说结婚后会因为这因为那变得不一样，会因为琐事消磨感情，虽然不知道他们是咋样的，但是现在我还一点体会不到，我体会到的只有我从一个人变成了两个人，从个体变成了家庭。</p>
+      <p>还记得刚开始在一起住的时候还会经常吵架，会因为一些琐事意见不合，家里的乱七八糟的事也会因为两人习惯不一样产生分歧，但是慢慢我们现在都过来了，而且变得越来越好，我们慢慢有了自己的朋友，小家庭也开始蒸蒸日上。这过程中我体会到了宝宝在生活中本来就是个很好很好的人，无论是日常习惯还是处理事情，反而我成为那个被照顾的人了好像，我有好多不好的习惯，而宝宝也都很容忍我，和我一起出去和我的朋友吃饭，有时候和我一起出去玩，而我也竭尽所能让宝宝过上好日子。</p>
+      <p>中间我心态转变还挺大的，两个人过上日子以后，感觉啥也得品对两个人的状态，后来慢慢的，就感觉我离不开你了，好像已经适应了两个人一起生活，而且从一开始觉得干家务啥的麻烦，到后面已经不觉的麻烦了，觉得这就是过日子还有的东西，家里必须要做的事情！这些我觉得都是宝宝带给我的。</p>
+      <p>虽然不知道你咋想，但我想，只要我们一心，可能宝宝和我想的也是一样的，而且宝宝可在家里付出的比我更多，可能也会有想法的改变，也有对我的迁就。最后，我想说虽然上班很累，生活鸡毛比较多，但是只要和你一起，做啥都是幸福的，就像你分享给我的抖音，只要有你就够了！</p>
+      <p>最后的最后。这是宝宝嫁过来以后过的第一个生日，一样以后生日也都这么过，不是为了炫耀，而是希望每次生日都能让宝宝开开心心的！</p>
+      <p class="signature">— 永远爱你的老公 💕</p>
+    </div>
+  </div>
+
+  <!-- Photo Carousel -->
+  <div class="carousel-section">
+    <div class="section-label">📷 我们的回忆 📷</div>
+    <div class="swiper" id="swiperContainer">
+      <div class="swiper-wrapper" id="swiperWrapper"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  <!-- QR Code -->
+  <div class="qr-section">
+    <div class="qr-card">
+      <div id="qrcode"></div>
+      <div class="qr-hint">📱 微信扫码 查看我们的回忆</div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Music Button -->
+<button class="music-btn" id="musicBtn" aria-label="音乐播放">🎵</button>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+<script>
+// ===== Photo List =====
+const PHOTOS = [
+  "photos/06fc2a213616128228501df77bb20d25.jpg",
+  "photos/0a6b90f58c77ede97d7c0e87799f8eef.jpg",
+  "photos/0a70f0c87e22fd1113c75fa7e6b9887e.jpg",
+  "photos/12b07b0f5a5ab96d7cb9d6efe4d8e33e.jpg",
+  "photos/12eb6e552c820fd8cf50eeba79627048.jpg",
+  "photos/147513d808d48f4282b4fad881d3ab70.jpg",
+  "photos/14cbae39bd717fd75469376f5f897e61.jpg",
+  "photos/17f81ba3515082f2423fa3e06f3f2bf3.jpg",
+  "photos/1a82e302ec092185af736bb559b09969.jpg",
+  "photos/23b6cc0531091d6eee7de6e7b64736c5.jpg",
+  "photos/24a688ed99adec7113a36af2b19d106f.jpg",
+  "photos/34a2acf07dc392a41fffcc83145e4d13.jpg",
+  "photos/37001085562d7093665b88711e0c5d27.jpg",
+  "photos/3e9e470454be03d9f939dceca676d7bc.jpg",
+  "photos/454a3e54d22c2b5ac11f7f301966cf14.jpg",
+  "photos/487ebe9073ad93e4713f5a18e81b7984.jpg",
+  "photos/4928665b067af047cf7dc150d87b915d.jpg",
+  "photos/508abd533fc8060931e94a15e0caf925.jpg",
+  "photos/50f146817443d56d457c380d6543cc9d.jpg",
+  "photos/5518a7bcd22520c043044195667c8039.jpg",
+  "photos/5b27392fd3b10b7b0d9c05308c6356d6.jpg",
+  "photos/5d1b6eb1351fa1673d482970070f3c17.jpg",
+  "photos/693ea61af61d805416df71ddcc4df5a7.jpg",
+  "photos/6e91084a765916942b676ed6a0ec44fc.jpg",
+  "photos/78b0a9d0b8d91ab365c4a4327c810e0a.jpg",
+  "photos/7a465c10ba5508dd80fa0aefb798673e.jpg",
+  "photos/7d3da7fafd5fe7a10bbc6507c86f4495.jpg",
+  "photos/7e84f92f0375f13e0d00b1132f517c1f.jpg",
+  "photos/88d6b33b90a187dc8dffd967d37d718d.jpg",
+  "photos/891f91152a9d357cc142903c57ac873c.jpg",
+  "photos/8cccacebb771d9c040a6ce2369a8dd2a.jpg",
+  "photos/8de51e3343f886e519a7892336787f7f.jpg",
+  "photos/8f7e0c5d0b555d639ace384e46595682.jpg",
+  "photos/9694c8be14a6031776d815aa1e974ab9.jpg",
+  "photos/a1f2b638ae838f63a007380fbcd74476.jpg",
+  "photos/a49249a2ffda8441576f8b0b49f86860.jpg",
+  "photos/ad35aa0d8b8f0428e9ffaa840336949e.jpg",
+  "photos/afe28ac00261968e2827fd77f6be2085.jpg",
+  "photos/b3e64597bdfacf2654e0a5d21e3ce1dd.jpg",
+  "photos/b5a2b982f68a6a86b6d62917e90dd77d.jpg",
+  "photos/b891fc19270d8de9116d4757cec8aa94.jpg",
+  "photos/ba583ea7728b4004499e8a4bd1daa950.jpg",
+  "photos/c28ec1cc0e017214d1ea89a0fe510957.jpg",
+  "photos/c7e9f8eaf59428fb1ae5bc01c9d82013.jpg",
+  "photos/ca0f55b1aad2a7d217224f82098f1cda.jpg",
+  "photos/cd04009d9505fa3f47fe1d615958376b.jpg",
+  "photos/cf039c11e06dac4ab50022acbb1b29a7.jpg",
+  "photos/cf07c5bdc14b74b719d72583a55dcd88.jpg",
+  "photos/d24f6950853ec8847140d155f56ef256.jpg",
+  "photos/db85628e93bd45f9c9284e58faecf96d.jpg",
+  "photos/e13494fcfa68417c684295b199507f0f.jpg",
+  "photos/e91b5860d5dcd1c0dd95de1d0538cf77.jpg",
+  "photos/f0ffb3de63014f4e82e6764432e4eaa3.jpg",
+  "photos/fed8bc8bb7bc220eeb4e2d701985cb56.jpg"
+];
+
+// ===== Shuffle Array =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ===== DOM Ready =====
+document.addEventListener('DOMContentLoaded', () => {
+  // --- Background Slideshow ---
+  const bgLayer = document.getElementById('bgLayer');
+  const bgPhotos = shuffle(PHOTOS).slice(0, 15);
+  bgPhotos.forEach((src, i) => {
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    if (i === 0) img.classList.add('active');
+    bgLayer.appendChild(img);
+  });
+  const bgImgs = bgLayer.querySelectorAll('img');
+  let bgIdx = 0;
+  setInterval(() => {
+    bgImgs[bgIdx].classList.remove('active');
+    bgIdx = (bgIdx + 1) % bgImgs.length;
+    bgImgs[bgIdx].classList.add('active');
+  }, 5000);
+
+  // --- Floating Petals ---
+  const petalsContainer = document.getElementById('petalsContainer');
+  const petalTypes = ['🌸', '💮', '🌷', '💗', '✨', '🩷', '💐', '🌺'];
+  for (let i = 0; i < 30; i++) {
+    const petal = document.createElement('span');
+    petal.className = 'petal';
+    petal.textContent = petalTypes[Math.floor(Math.random() * petalTypes.length)];
+    petal.style.left = Math.random() * 100 + '%';
+    petal.style.fontSize = (16 + Math.random() * 20) + 'px';
+    petal.style.animationDuration = (8 + Math.random() * 14) + 's';
+    petal.style.animationDelay = Math.random() * 10 + 's';
+    petal.style.setProperty('--drift', (Math.random() * 100 - 50) + 'px');
+    petalsContainer.appendChild(petal);
+  }
+
+  // --- Swiper Carousel ---
+  const swiperWrapper = document.getElementById('swiperWrapper');
+  PHOTOS.forEach(src => {
+    const slide = document.createElement('div');
+    slide.className = 'swiper-slide';
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = '我们的照片';
+    img.loading = 'lazy';
+    slide.appendChild(img);
+    swiperWrapper.appendChild(slide);
+  });
+
+  new Swiper('#swiperContainer', {
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    slidesPerView: 'auto',
+    initialSlide: Math.floor(Math.random() * PHOTOS.length),
+    loop: true,
+    autoplay: { delay: 3000, disableOnInteraction: false, pauseOnMouseEnter: true },
+    coverflowEffect: {
+      rotate: 15,
+      stretch: 0,
+      depth: 200,
+      modifier: 1,
+      slideShadows: false
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+      dynamicBullets: true
+    },
+    breakpoints: {
+      320: { slidesPerView: 1.15, spaceBetween: 12 },
+      480: { slidesPerView: 1.3, spaceBetween: 16 },
+      768: { slidesPerView: 1.6, spaceBetween: 20 }
+    }
+  });
+
+  // --- QR Code ---
+  const pageUrl = window.location.href;
+  new QRCode(document.getElementById('qrcode'), {
+    text: pageUrl,
+    width: 130,
+    height: 130,
+    colorDark: '#5d4037',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+  // --- Music (Web Audio API - Gentle Ambient) ---
+  let audioCtx = null;
+  let musicPlaying = false;
+  let musicNodes = [];
+  const musicBtn = document.getElementById('musicBtn');
+  const tapHint = document.getElementById('tapHint');
+
+  // Show tap hint on first visit
+  setTimeout(() => {
+    if (!musicPlaying) tapHint.classList.add('show');
+    setTimeout(() => tapHint.classList.remove('show'), 3000);
+  }, 1500);
+
+  function createMusic() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    // Gentle chord progression: Cmaj7 - G - Am - Fmaj7 (repeating)
+    // Frequencies scaled to be soft and ambient
+    const chords = [
+      [261.63, 329.63, 392.00, 493.88], // Cmaj7: C E G B
+      [196.00, 293.66, 392.00, 493.88], // G/B variant: B D E G
+      [220.00, 261.63, 329.63, 440.00], // Am: A C E A
+      [174.61, 261.63, 349.23, 440.00], // Fmaj7: F A C E
+    ];
+
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.08;
+    masterGain.connect(audioCtx.destination);
+
+    let chordIdx = 0;
+    const chordDuration = 3.2; // seconds per chord
+
+    function playChord(idx) {
+      const now = audioCtx.currentTime;
+      const chord = chords[idx];
+      const nodes = [];
+
+      chord.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+
+        // Gentle ADSR
+        const attack = 0.8;
+        const decay = 0.4;
+        const sustain = 0.35;
+        const release = 1.2;
+        const dur = chordDuration;
+
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.5, now + attack);
+        gain.gain.linearRampToValueAtTime(sustain, now + attack + decay);
+        gain.gain.setValueAtTime(sustain, now + dur - release);
+        gain.gain.linearRampToValueAtTime(0, now + dur);
+
+        // Slight detune for warmth
+        osc.detune.value = (i - 1.5) * 4;
+
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + dur + 0.1);
+
+        nodes.push({ osc, gain });
+      });
+
+      return nodes;
+    }
+
+    function scheduleNext() {
+      if (!musicPlaying) return;
+      musicNodes = playChord(chordIdx);
+      chordIdx = (chordIdx + 1) % chords.length;
+    }
+
+    scheduleNext();
+    const interval = setInterval(() => {
+      if (!musicPlaying) { clearInterval(interval); return; }
+      scheduleNext();
+    }, chordDuration * 1000);
+
+    musicNodes._interval = interval;
+  }
+
+  function startMusic() {
+    if (musicPlaying) return;
+    musicPlaying = true;
+    createMusic();
+    musicBtn.textContent = '🎶';
+    musicBtn.classList.add('playing');
+    tapHint.classList.remove('show');
+  }
+
+  function stopMusic() {
+    if (!musicPlaying) return;
+    musicPlaying = false;
+    musicNodes.forEach(n => {
+      try { n.osc.stop(); } catch(e) {}
+    });
+    musicNodes = [];
+    if (musicNodes._interval) clearInterval(musicNodes._interval);
+    musicBtn.textContent = '🎵';
+    musicBtn.classList.remove('playing');
+  }
+
+  musicBtn.addEventListener('click', () => {
+    if (musicPlaying) { stopMusic(); }
+    else { startMusic(); }
+  });
+
+  // First-tap anywhere to start music (WeChat requires user gesture)
+  function firstInteractionHandler() {
+    if (!musicPlaying) {
+      startMusic();
+    }
+    document.removeEventListener('click', firstInteractionHandler);
+    document.removeEventListener('touchstart', firstInteractionHandler);
+  }
+  document.addEventListener('click', firstInteractionHandler, { once: false });
+
+  // --- Hide Loading Screen ---
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+  }, 1200);
+});
+</script>
+
+</body>
+</html>
